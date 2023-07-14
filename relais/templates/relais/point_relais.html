@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+   <img src="{% static 'img/logo.png' %}" alt="Logo">
+   <title>Ajouter un point relais</title>
+   <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+   <script>
+      function getLocation() {
+         if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+         } else {
+            alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
+         }
+      }
+
+      function showPosition(position) {
+         document.getElementById("latitude").value = position.coords.latitude;
+         document.getElementById("longitude").value = position.coords.longitude;
+      }
+   </script>
+</head>
+<body>
+   <h1>Ajouter un point relais</h1>
+   <form method="POST" action="{% url 'point_relais' %}">
+      {% csrf_token %}
+      <label for="first_name">Prénom :</label>
+      <input type="text" name="first_name" required><br><br>
+      <label for="last_name">Nom :</label>
+      <input type="text" name="last_name" required><br><br>
+      <label for="relay_name">Nom du relais :</label>
+      <input type="text" name="relay_name" required><br><br>
+      <label for="quartier">Quartier :</label>
+      <select name="quartier" id="quartier">
+        <option value="Adewui">Adewui</option>
+        <option value="Kohé">Kohé</option>
+        <option value="Kagomé">Kagomé</option>
+        <option value="Baguida">Baguida</option>
+      </select><br><br>
+      <label for="numero_telephone">Numero de telephone :</label>
+      <input type="text" name="numero_telephone" pattern="[0-9]{8,8}" minlength="8" required><br><br>
+      <button type="button" onclick="getLocation()">Obtenir la géolocalisation</button><br><br>
+      <label for="latitude">Latitude :</label>
+      <input type="text" name="latitude" id="latitude" readonly><br><br>
+      <label for="longitude">Longitude :</label>
+      <input type="text" name="longitude" id="longitude" readonly><br><br>
+      <label for="gmanager_signature">Signature du gérant :</label>
+      <input type="checkbox" name="gmanager_signature" required><br><br>
+      <input type="submit" value="Ajouter">
+   </form>
+   <br>
+   <button onclick="window.location.href='{% url 'all_relais' %}'">Afficher tous les relais</button>
+</body>
+</html>

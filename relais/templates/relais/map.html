@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tous les relais</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tous les relais</h1>
+    <div id="map"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Récupérer les données des relais depuis le serveur
+        fetch('/api/relais')
+            .then(response => response.json())
+            .then(data => {
+                // Initialiser la carte
+                var map = L.map('map').setView([48.8588377, 2.2770206], 12);
+
+                // Ajouter une couche de carte de base
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                // Parcourir les données des relais et ajouter les marqueurs sur la carte
+                data.relais.forEach(relais => {
+                    var marker = L.marker([relais.latitude, relais.longitude]).addTo(map);
+                    marker.bindPopup(relais.relay_name);
+                });
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des données des relais:', error);
+            });
+    </script>
+</body>
+</html>
